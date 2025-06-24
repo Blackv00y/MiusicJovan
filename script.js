@@ -1,6 +1,6 @@
 // Reemplaza con tu Client ID
 const clientId = '60abfec850fb4ee18f710c9255ed19db';
-const redirectUri = 'https://blackv00y.github.io/miusicjovan/callback.html';
+const redirectUri = 'https://blackv00y.github.io/MiusicJovan/callback.html';
 const scopes = 'user-read-private user-read-email';
 
 function login() {
