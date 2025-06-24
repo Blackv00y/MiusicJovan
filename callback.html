@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Callback</title></head>
+<body>
+  <h2>Autenticando...</h2>
+  <script>
+    const hash = window.location.hash.substring(1);
+    const token = hash.split('&').find(param => param.startsWith('access_token')).split('=')[1];
+    localStorage.setItem('spotify_token', token);
+    window.location.href = 'home.html';
+  </script>
+</body>
+</html>

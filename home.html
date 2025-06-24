@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Canciones</title></head>
+<body>
+  <h1>Canciones populares de Bad Bunny</h1>
+  <ul id="songs"></ul>
+
+  <script>
+    const token = localStorage.getItem('spotify_token');
+
+    // Buscar artista
+    fetch('https://api.spotify.com/v1/search?q=bad%20bunny&type=artist', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const artistId = data.artists.items[0].id;
+
+      // Obtener top tracks
+      return fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`, {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById('songs');
+      data.tracks.forEach(track => {
+        const li = document.createElement('li');
+        li.textContent = track.name;
+        list.appendChild(li);
+      });
+    })
+    .catch(err => console.error('Error:', err));
+  </script>
+</body>
+</html>
