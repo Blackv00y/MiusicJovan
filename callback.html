@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>Callback</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Callback</title>
+</head>
 <body>
   <h2>Autenticando...</h2>
   <script>
     const hash = window.location.hash.substring(1);
-    const token = hash.split('&').find(param => param.startsWith('access_token')).split('=')[1];
-    localStorage.setItem('spotify_token', token);
-    window.location.href = 'home.html';
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+
+    if (token) {
+      localStorage.setItem('spotify_token', token);
+      window.location.href = 'home.html';
+    } else {
+      document.body.innerHTML = "<h2>Error: No se recibió el token de Spotify.</h2>";
+      console.error("Token no encontrado en el hash:", hash);
+    }
   </script>
 </body>
 </html>
