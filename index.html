@@ -2,91 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>MiusicJovan 🎶</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #1db954;
-      margin-bottom: 20px;
-    }
-
-    #searchForm {
-      display: flex;
-      justify-content: center;
-      max-width: 600px;
-      margin: 0 auto 30px auto;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px 0 0 8px;
-    }
-
-    button {
-      padding: 10px 15px;
-      background-color: #1db954;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 0 8px 8px 0;
-      cursor: pointer;
-    }
-
-    #videos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .video-card {
-      background-color: #1e1e1e;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      transition: transform 0.2s;
-    }
-
-    .video-card:hover {
-      transform: scale(1.02);
-    }
-
-    .thumbnail {
-      width: 100%;
-      display: block;
-    }
-
-    .video-info {
-      padding: 10px;
-    }
-
-    .video-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    iframe {
-      width: 100%;
-      height: 180px;
-      border: none;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-  </style>
+  <title>MiusicJovan </title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>MiusicJovan 🎵</h1>
+  <h1>MiusicJovan</h1>
 
   <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Buscar artista o canción..." />
@@ -104,13 +24,11 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const query = input.value.trim();
-      if (query) {
-        buscarVideos(query);
-      }
+      if (query) buscarVideos(query);
     });
 
     function buscarVideos(query) {
-      container.innerHTML = '<p>Cargando videos...</p>';
+      container.innerHTML = '<p class="loading">Cargando videos...</p>';
       fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=6&key=${apiKey}`)
         .then(res => res.json())
         .then(data => {
@@ -118,27 +36,23 @@
           data.items.forEach(item => {
             const videoId = item.id.videoId;
             const title = item.snippet.title;
-            const thumbnail = item.snippet.thumbnails.medium.url;
 
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.innerHTML = `
-              <img src="${thumbnail}" alt="${title}" class="thumbnail" />
-              <div class="video-info">
-                <p class="video-title">${title}</p>
-                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-              </div>
+            const block = document.createElement('div');
+            block.className = 'video-block';
+            block.innerHTML = `
+              <h3 class="video-title">${title}</h3>
+              <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
             `;
-            container.appendChild(card);
+            container.appendChild(block);
           });
         })
         .catch(err => {
           console.error(err);
-          container.innerHTML = '<p>Error al cargar videos. Intenta de nuevo.</p>';
+          container.innerHTML = '<p class="error">Error al cargar los videos.</p>';
         });
     }
 
-    // Buscar por defecto
+    // Cargar por defecto
     buscarVideos('Bad Bunny');
   </script>
 </body>
