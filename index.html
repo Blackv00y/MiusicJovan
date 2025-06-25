@@ -2,13 +2,109 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Spotify API Práctica</title>
+  <title>MiusicJovan - YouTube Edition</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1db954;
+    }
+
+    #searchForm {
+      display: flex;
+      justify-content: center;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #1db954;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    #videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Conectar con Spotify</h1>
-  <button onclick="login()">Iniciar sesión con Spotify</button>
+  <h1>MiusicJovan 🎶</h1>
 
-  <script src="script.js"></script>
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Buscar artista (Ej: Bad Bunny)">
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div id="videos"></div>
+
+  <script>
+    const apiKey = 'AIzaSyDH9b6rUq0MAZyoqfw_4MZdcJdjJLNfTu8';
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const videoContainer = document.getElementById('videos');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (query) {
+        buscarVideos(query);
+      }
+    });
+
+    function buscarVideos(query) {
+      videoContainer.innerHTML = '<p>Cargando...</p>';
+
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=6&key=${apiKey}`)
+        .then(res => res.json())
+        .then(data => {
+          videoContainer.innerHTML = '';
+          data.items.forEach(item => {
+            const videoId = item.id.videoId;
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            videoContainer.appendChild(iframe);
+          });
+        })
+        .catch(err => {
+          console.error('Error al cargar los videos:', err);
+          videoContainer.innerHTML = '<p>Error al cargar los videos.</p>';
+        });
+    }
+
+    // Cargar Bad Bunny por defecto
+    buscarVideos('Bad Bunny');
+  </script>
 </body>
 </html>
-    
